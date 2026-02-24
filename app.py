@@ -1,8 +1,8 @@
 import os
 import streamlit as st
-import google.ai.generativelanguage as genai
+import google.generativeai as genai
 
-# Configure Gemini with your API key
+# Load Gemini API key from Streamlit Secrets
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 st.title("AI Resume & Portfolio Builder (Gemini)")
@@ -25,8 +25,8 @@ if st.button("Generate Resume"):
         Format it clearly with sections.
         """
 
-        # ✅ Correct Gemini call
-        model = genai.GenerativeModel(model_name="gemini-1.5-flash")  # or "gemini-1.5-pro"
+        # ✅ Gemini call
+        model = genai.GenerativeModel("gemini-1.5-flash")  # or "gemini-1.5-pro"
         response = model.generate_content(prompt)
 
         st.subheader("Generated Resume")
