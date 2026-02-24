@@ -1,13 +1,12 @@
-
 import os
 import streamlit as st
 import google.generativeai as genai
 
-# Load Gemini API key from secrets
+# Load Gemini API key from Streamlit Secrets
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-
-st.title("AI Resume & Portfolio Builder")
+# App title
+st.title("AI Resume & Portfolio Builder (Gemini)")
 
 # Collect student input
 name = st.text_input("Full Name")
@@ -15,9 +14,10 @@ email = st.text_input("Email")
 education = st.text_area("Education")
 skills = st.text_area("Skills (comma separated)")
 
+# Button to generate resume
 if st.button("Generate Resume"):
     try:
-        # ✅ Define the prompt
+        # Build the prompt
         prompt = f"""
         Create a professional resume for:
         Name: {name}
@@ -27,17 +27,15 @@ if st.button("Generate Resume"):
         Format it clearly with sections.
         """
 
-        # ✅ Call OpenAI safely
-        response = client.chat.completions.create(
-            model="gemini-1.5-flash",   # or gemini-1.5-pro 
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=800
-        )
+        # Call Gemini model
+        model = genai.GenerativeModel("gemini-1.5-flash")  # or "gemini-1.5-pro"
+        response = model.generate_content(prompt)
 
+        # Display result
         st.subheader("Generated Resume")
-        st.write(response.choices[0].message.content.strip())
+        st.write(response.text)
 
     except Exception as e:
-        # ✅ Friendly error message
-        st.error("⚠️ Sorry, something went wrong while generating your resume. Please try again later.")
+        # Friendly error message
+        st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
