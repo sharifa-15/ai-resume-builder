@@ -47,7 +47,7 @@ if st.button("Generate Resume"):
             for line in resume_text.split("\n"):
                 pdf.multi_cell(0, 10, line)
 
-            pdf_output = pdf.output(dest="S").encode("latin-1")
+            pdf_output = pdf.output(dest="S").encode("utf-8")
 
             st.download_button(
                 label="📄 Download Resume as PDF",
@@ -59,3 +59,4 @@ if st.button("Generate Resume"):
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
+
