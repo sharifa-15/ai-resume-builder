@@ -25,13 +25,20 @@ if st.button("Generate Resume"):
         Format it clearly with sections.
         """
 
-        # ✅ Gemini call
-        model = genai.GenerativeModel("gemini-1.5-flash")  # or "gemini-1.5-pro"
-        response = model.generate_content(prompt)
+        # ✅ Automatically pick the first available Gemini model
+        available_models = list(genai.list_models())
+        if not available_models:
+            st.error("⚠️ No Gemini models available for your account.")
+        else:
+            model_name = available_models[0].name
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
 
-        st.subheader("Generated Resume")
-        st.write(response.text)
+            st.subheader("Generated Resume")
+            st.write(response.text)
 
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
+
+      
