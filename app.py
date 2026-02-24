@@ -26,33 +26,36 @@ if st.button("Generate Resume"):
         Format it clearly with sections.
         """
 
-        # Gemini call
-        model = genai.GenerativeModel("gemini-1.5-pro")  # safer choice
-        response = model.generate_content(prompt)
+        # ✅ Automatically pick the first available Gemini model
+        available_models = list(genai.list_models())
+        if not available_models:
+            st.error("⚠️ No Gemini models available for your account.")
+        else:
+            model_name = available_models[0].name
+            model = genai.GenerativeModel(model_name)
+            response = model.generate_content(prompt)
 
-        resume_text = response.text
+            resume_text = response.text
 
-        st.subheader("Generated Resume")
-        st.write(resume_text)
+            st.subheader("Generated Resume")
+            st.write(resume_text)
 
-        # ✅ PDF Export
-        pdf = FPDF()
-        pdf.add_page()
-        pdf.set_font("Arial", size=12)
-        for line in resume_text.split("\n"):
-            pdf.multi_cell(0, 10, line)
+            # ✅ PDF Export
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            for line in resume_text.split("\n"):
+                pdf.multi_cell(0, 10, line)
 
-        pdf_output = pdf.output(dest="S").encode("latin-1")
+            pdf_output = pdf.output(dest="S").encode("latin-1")
 
-        st.download_button(
-            label="📄 Download Resume as PDF",
-            data=pdf_output,
-            file_name="resume.pdf",
-            mime="application/pdf"
-        )
+            st.download_button(
+                label="📄 Download Resume as PDF",
+                data=pdf_output,
+                file_name="resume.pdf",
+                mime="application/pdf"
+            )
 
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
-
-   
