@@ -14,22 +14,28 @@ education = st.text_area("Education")
 skills = st.text_area("Skills (comma separated)")
 
 if st.button("Generate Resume"):
-    # ✅ Define the prompt first
-    prompt = f"""
-    Create a professional resume for:
-    Name: {name}
-    Email: {email}
-    Education: {education}
-    Skills: {skills}
-    Format it clearly with sections.
-    """
+    try:
+        # ✅ Define the prompt
+        prompt = f"""
+        Create a professional resume for:
+        Name: {name}
+        Email: {email}
+        Education: {education}
+        Skills: {skills}
+        Format it clearly with sections.
+        """
 
-    # ✅ Then call the API
-    response = client.chat.completions.create(
-        model="gpt-4.1",   # or gpt-4.1-mini / gpt-3.5-turbo
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=800
-    )
+        # ✅ Call OpenAI safely
+        response = client.chat.completions.create(
+            model="gpt-4.1",   # or gpt-4.1-mini / gpt-3.5-turbo
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=800
+        )
 
-    st.subheader("Generated Resume")
-    st.write(response.choices[0].message.content.strip())
+        st.subheader("Generated Resume")
+        st.write(response.choices[0].message.content.strip())
+
+    except Exception as e:
+        # ✅ Friendly error message
+        st.error("⚠️ Sorry, something went wrong while generating your resume. Please try again later.")
+        st.write(f"Error details: {str(e)}")
