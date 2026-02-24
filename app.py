@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 import google.generativeai as genai
-from fpdf import FPDF  # lightweight PDF library
+from docx import Document  # for Word file export
 
 # Load Gemini API key from Streamlit Secrets
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -40,27 +40,23 @@ if st.button("Generate Resume"):
             st.subheader("Generated Resume")
             st.write(resume_text)
 
-            # ✅ PDF Export with Unicode font
-            pdf = FPDF()
-            pdf.add_page()
-            # Make sure DejaVuSans.ttf is in the same folder as app.py
-            pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-            pdf.set_font("DejaVu", size=12)
-
+            # ✅ DOCX Export
+            doc = Document()
             for line in resume_text.split("\n"):
-                # Replace problematic characters to avoid layout errors
-                safe_line = line.replace("–", "-").replace("•", "*")
-                pdf.multi_cell(0, 10, safe_line, align="L")
+                doc.add_paragraph(line)
 
-            pdf_output = pdf.output(dest="S").encode("utf-8")
+            doc_output = "resume.docx"
+            doc.save(doc_output)
 
-            st.download_button(
-                label="📄 Download Resume as PDF",
-                data=pdf_output,
-                file_name="resume.pdf",
-                mime="application/pdf"
-            )
+            with open(doc_output, "rb") as f:
+                st.download_button(
+                    label="📄 Download Resume as DOCX",
+                    data=f,
+                    file_name="resume.docx",
+                    mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                )
 
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
+
