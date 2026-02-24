@@ -40,14 +40,17 @@ if st.button("Generate Resume"):
             st.subheader("Generated Resume")
             st.write(resume_text)
 
-            # ✅ PDF Export
+            # ✅ PDF Export with Unicode font
             pdf = FPDF()
             pdf.add_page()
-            pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)  # font file must exist
+            # Make sure DejaVuSans.ttf is in the same folder as app.py
+            pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
             pdf.set_font("DejaVu", size=12)
 
             for line in resume_text.split("\n"):
-                pdf.multi_cell(0, 10, line)
+                # Replace problematic characters to avoid layout errors
+                safe_line = line.replace("–", "-").replace("•", "*")
+                pdf.multi_cell(0, 10, safe_line, align="L")
 
             pdf_output = pdf.output(dest="S").encode("utf-8")
 
@@ -61,5 +64,3 @@ if st.button("Generate Resume"):
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
-
-       
