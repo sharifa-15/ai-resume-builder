@@ -24,11 +24,12 @@ if st.button("Generate Resume"):
     """
 
     # ✅ Correct call with supported model
-    response = client.chat.completions.create(
-        model="gpt-4-turbo",   # supported model name
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=800
-    )
+response = client.chat.completions.create(
+    model="gpt-4.1",   # ✅ newer GPT-4 model
+    messages=[{"role": "user", "content": prompt}],
+    max_tokens=800
+)
 
+   
     st.subheader("Generated Resume")
     st.write(response.choices[0].message.content.strip())
