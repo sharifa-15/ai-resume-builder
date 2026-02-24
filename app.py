@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 import streamlit as st
 
-# Load your API key securely from Streamlit Secrets
+# Load your API key securely
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.title("AI Resume & Portfolio Builder")
@@ -14,6 +14,7 @@ education = st.text_area("Education")
 skills = st.text_area("Skills (comma separated)")
 
 if st.button("Generate Resume"):
+    # ✅ Define the prompt first
     prompt = f"""
     Create a professional resume for:
     Name: {name}
@@ -23,13 +24,12 @@ if st.button("Generate Resume"):
     Format it clearly with sections.
     """
 
-    # ✅ Correct call with supported model
-response = client.chat.completions.create(
-    model="gpt-4.1",   # ✅ newer GPT-4 model
-    messages=[{"role": "user", "content": prompt}],
-    max_tokens=800
-)
+    # ✅ Then call the API
+    response = client.chat.completions.create(
+        model="gpt-4.1",   # or gpt-4.1-mini / gpt-3.5-turbo
+        messages=[{"role": "user", "content": prompt}],
+        max_tokens=800
+    )
 
-   
-st.subheader("Generated Resume")
-st.write(response.choices[0].message.content.strip())
+    st.subheader("Generated Resume")
+    st.write(response.choices[0].message.content.strip())
