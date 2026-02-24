@@ -1,9 +1,11 @@
-from openai import OpenAI
+
 import os
 import streamlit as st
+import google.generativeai as genai
 
-# Load your API key securely
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# Load Gemini API key from secrets
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
 
 st.title("AI Resume & Portfolio Builder")
 
@@ -27,7 +29,7 @@ if st.button("Generate Resume"):
 
         # ✅ Call OpenAI safely
         response = client.chat.completions.create(
-            model="gpt-4.1",   # or gpt-4.1-mini / gpt-3.5-turbo
+            model="gemini-1.5-flash",   # or gemini-1.5-pro 
             messages=[{"role": "user", "content": prompt}],
             max_tokens=800
         )
