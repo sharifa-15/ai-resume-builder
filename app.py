@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 import streamlit as st
 
-# Load your API key from secrets
+# Load your API key securely
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.title("AI Resume & Portfolio Builder")
@@ -23,9 +23,9 @@ if st.button("Generate Resume"):
     Format it clearly with sections.
     """
 
-    # ✅ New API call
+    # ✅ Use a supported model name
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4-turbo",   # or "gpt-4.1" if available
         messages=[{"role": "user", "content": prompt}],
         max_tokens=800
     )
