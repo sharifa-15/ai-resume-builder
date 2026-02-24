@@ -64,4 +64,3 @@ if st.button("Generate Resume"):
     except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
-
