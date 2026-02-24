@@ -19,10 +19,10 @@ if st.button("Generate Resume"):
         # Build the prompt
         prompt = f"""
         Create a professional resume for:
-        Name: {name}
-        Email: {email}
-        Education: {education}
-        Skills: {skills}
+        Name: {NAME}
+        Email: {EMAIL}
+        Education: {EDUCATION}
+        Skills: {SKILLS}
         Format it clearly with sections.
         """
 
@@ -34,29 +34,32 @@ if st.button("Generate Resume"):
             model_name = available_models[0].name
             model = genai.GenerativeModel(model_name)
             response = model.generate_content(prompt)
-
+            
             resume_text = response.text
 
-            st.subheader("Generated Resume")
-            st.write(resume_text)
+          st.subheader("Generated Resume")
+         st.write(resume_text)
 
-            # ✅ PDF Export
-            pdf = FPDF()
-            pdf.add_page()
-            pdf.set_font("Arial", size=12)
-            for line in resume_text.split("\n"):
-                pdf.multi_cell(0, 10, line)
+          # ✅ PDF Export
+         pdf = FPDF()
+         pdf.add_page()
+        pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)  # load font file
+       pdf.set_font("DejaVu", size=12)
 
-            pdf_output = pdf.output(dest="S").encode("utf-8")
+       for line in resume_text.split("\n"):
+            pdf.multi_cell(0, 10, line)
 
-            st.download_button(
-                label="📄 Download Resume as PDF",
-                data=pdf_output,
-                file_name="resume.pdf",
-                mime="application/pdf"
-            )
+      pdf_output = pdf.output(dest="S").encode("utf-8")
 
-    except Exception as e:
+     st.download_button(
+        label="📄 Download Resume as PDF",
+        data=pdf_output,
+        file_name="resume.pdf",
+      mime="application/pdf"
+)
+
+        except Exception as e:
         st.error("⚠️ Sorry, something went wrong while generating your resume.")
         st.write(f"Error details: {str(e)}")
+
 
