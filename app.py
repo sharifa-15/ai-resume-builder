@@ -31,5 +31,5 @@ response = client.chat.completions.create(
 )
 
    
-     st.subheader("Generated Resume")
-     st.write(response.choices[0].message.content.strip())
+st.subheader("Generated Resume")
+st.write(response.choices[0].message.content.strip())
